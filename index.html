@@ -1,38 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>61070193 - Multimedia Programming 2563 ITKMITL</title>
+	<title>Lab - Multimedia Programming 2563 ITKMITL</title>
 	<link rel=stylesheet href="../src/reset.css">
 	<link rel=stylesheet href="lab.css">
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body class="paper">
 	<div id="app">
-		<input type="number" v-model="n">
-		<input type="number" v-model="n">
+		<h4>แม่สูตรคูณ<input type="number" v-model="number"></h4>
+		<h4>จำนวนแถว<input type="number" v-model="row"></h4>
 		<div class="space"></div>
-		<h3>สูตรคูณแม่ {{n}}</h3>
-		<h5>แม่ก่อนหน้า -> แม่ {{before_n}}</h5>
-		<h4
-		v-for="i in row"
-		>{{n}} x {{i}} = {{x(i)}}</h4>
-
+		<h3>ตารางสูตรคูณแม่ {{number}}</h3>
+		<h5>แม่ก่อนหน้า -> {{lasted}}</h5>
+		<h4 v-for="i in r">{{number}} x {{i}} = {{cal(i)}}</h4>
+		<h4>ผลรวม = {{sum(row)}}</h4>
 	</div>
 
 	<script>
 		let app = new Vue({
-			el:'#app',
-			data:{
-				n:2,
-				before_n:1,
-				row:12
+			el: '#app',
+			data: {
+				number: 2,
+				lasted: 1,
+				row: 12
 			},
-			methods:{
-				multiply: function(row){
-					return this.n*row
+			methods: {
+				cal: function(row){
+					return this.number*row
+				},
+				sum: function(row){
+					x = 0
+					for (var i = 0; i <= row; i++) {
+						x += this.number*i
+					}
+					return x
 				}
 			},
 			computed: {
+				r: function(){
+					return parseInt(this.row)
+				},
 				x2: function(){
 					return this.n*2
 				},
@@ -68,11 +76,11 @@
 				}
 			},
 			watch: {
-				n: function(a,b){
-					this.before_n = b
+				number: function(a,b){
+					this.lasted = b
 				}
 			}
-		});
+		})
 	</script>
 </body>
 </html>
