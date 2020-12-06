@@ -10,47 +10,99 @@
 
 <body>
 	<div id="app">
+		About
+		<h3>Username {{person.username}}</h3>
+		<h3>Name {{person.name}}</h3>
+		<h3>Email {{person.email}}</h3>
+		<h3>website {{person.website}}</h3>
+		<h3>company {{person.company.name}}</h3>
+		<button @click="isthisgood">เขาเป็นสมาชิกลุ่มที่ดีหรือไม่</button>
+		<h2>{{yesno.answer}}</h2>
+		<img :src="yesno.image" alt="">
 
+		Users
+		<h2 v-for="u in users" :data-id="u.id" @click="viewBio(u)">
+			<img :src="`https://picsum.photos/id/3${u.id}/200/300`" alt="">
+			{{u.username}}
+		</h2>
 	</div>
 
 
 	<script>
 		fetch('https://jsonplaceholder.typicode.com/users')
 			.then(response => response.json())
-			.then(json => { console.log(json) })
+			.then(json => {
+				console.log(json)
+				app.users = json
+				app.person = json[0]
+			})
 
 
 		let app = new Vue({
 			el: '#app',
+			methods: {
+				viewBio: function (user) {
+					this.person = user
+				},
+				isthisgood: function () {
+					fetch('https://yesno.wtf/api')
+						.then(response => response.json())
+						.then(json => {
+							console.log(json)
+							app.yesno = json
+						})
+				}
+			},
 			data: {
-				users: [
-					{
-						"id": 1,
-						"name": "Leanne Graham",
-						"username": "Bret",
-						"email": "Sincere@april.biz",
-						"website": "hildegard.org",
-						"company": {
-							"name": "Romaguera-Crona",
-							"catchPhrase": "Multi-layered client-server neural-net",
-							"bs": "harness real-time e-markets"
-						}
-					},
-					{
-						"id": 2,
-						"name": "Leanne Graham",
-						"username": "Bret",
-						"email": "Sincere@april.biz",
-						"website": "hildegard.org",
-						"company": {
-							"name": "Romaguera-Crona",
-							"catchPhrase": "Multi-layered client-server neural-net",
-							"bs": "harness real-time e-markets"
-						}
-					},
+				yesno: {
+					"answer": "อยากรู้ คลิกเลย",
+					"forced": false,
+					"image": ""
+				},
+				person: {
+					"id": 1,
+					"name": "________",
+					"username": "________",
+					"email": "________",
+					"website": "________",
+					"company": {
+						"name": "________",
+						"catchPhrase": "Multi-layered client-server neural-net",
+						"bs": "harness real-time e-markets"
+					}
+				},
+				users: [{
+					"id": 1,
+					"name": "Leanne Graham",
+					"username": "Bret",
+					"email": "Sincere@april.biz",
+					"website": "hildegard.org",
+					"company": {
+						"name": "Romaguera-Crona",
+						"catchPhrase": "Multi-layered client-server neural-net",
+						"bs": "harness real-time e-markets"
+					}
+				},
+				{
+					"id": 2,
+					"name": "________",
+					"username": "________",
+					"email": "________",
+					"website": "hildegard.org",
+					"company": {
+						"name": "Romaguera-Crona",
+						"catchPhrase": "Multi-layered client-server neural-net",
+						"bs": "harness real-time e-markets"
+					}
+				},
+				]
 			}
 		})
-
+		// function viewBio(h2) {
+		// 	let id = h2.dataset.id;
+		// 	app.person = app.users[id-1]
+		// 	console.log(id)
+		// }
 	</script>
 </body>
 
