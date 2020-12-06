@@ -43,6 +43,11 @@
 			methods: {
 				viewBio: function (user) {
 					this.person = user
+					this.yesno = {
+						"answer": "อยากรู้ คลิกเลย",
+						"forced": false,
+						"image": ""
+					}
 				},
 				isthisgood: function () {
 					fetch('https://yesno.wtf/api')
