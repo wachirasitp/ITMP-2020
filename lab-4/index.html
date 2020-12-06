@@ -15,15 +15,15 @@
 		</section>
 		<section id="canvas_main">
 			<main>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
-				<a-dot style="--l:80%"></a-dot>
-				<a-dot data-pick="true"></a-dot>
-				<a-dot></a-dot>
-				<a-dot></a-dot>
+				<a-dot v-for="i in row*row"
+				:style="{
+				'--row':row,
+				'--h':h,
+				'--l':l+'%',
+			}"
+				:data-pick="i == pick"
+				@click="check(i == pick)"
+				></a-dot>
 			</main>
 		</section>
 		<section id="canvas_footer">
@@ -31,11 +31,15 @@
 				{{score}} คะแนน
 			</div>
 		</section>
+		<section id="canvas_footer">
+			<div id="restart">
+			</div>
+		</section>
 	</div>
 
 	<script>
-		let picklight = "20%" //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
-		document.registerElement('a-dot') //ให้ vue รู้จัก a-dot
+		let picklight = "35%" //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
+		//document.registerElement('a-dot') //ให้ vue รู้จัก a-dot
 
 		function rand(start,stop){//สร้างฟังก์ชัน random ไว้ใช้
 			let shift = (stop-start)+1
@@ -46,14 +50,47 @@
 			el:'#canvas',
 			data:{
 				row:2, //จำนวนแถวที่จะมีในรอบนี้
-				h:330, // hue ในรอบนี้
-				time:10, //เวลาเริ่มต้น
+				h:200, // hue ในรอบนี้
+				time:5, //เวลาเริ่มต้น
 				score:0, //คะแนนเริ่มต้น
-				pick:1, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
-				l:30,//ความสว่างของสีทั่วไปในรอบนี้
+				pick:rand(1,4), //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
+				l:50,//ความสว่างของสีทั่วไปในรอบนี้
+				c:0, //ไว้เช็คว่า row เกิน 15 หรือเปล่า
 			},
 			methods: {
-
+				check: function(e){
+					console.log(e)
+					if(e == true){
+						this.correct()
+					}
+					else{
+						this.score--
+					}
+				},
+				correct: function(){
+					if(this.row <= 15 && this.c != 1){
+						this.row++
+					}
+					else{
+						this.c = 1
+						this.row = rand(2,15)
+					}
+					this.pick = rand(1,this.row*this.row)
+					this.time = 5
+					this.score++
+					this.h = rand(0,360)
+					document.querySelector('#canvas').style.setProperty('--picklight',picklight);
+					console.log('Correct!')
+				},
+				end: function(){
+					window.alert("Game Over!\nYour score is "+this.score)
+					this.score = 0
+					this.time = -1
+					this.row = 2
+					this.pick = rand(1,4)
+					this.c = 0
+					document.getElementById("restart").innerHTML = 'Click the Difference color to try again!'
+				}
 			}
 		})
 		//ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
@@ -62,8 +99,8 @@
 		let counter = setInterval(()=>{
 			if (app.time>0) {
 				app.time--
-			}else{
-				clearInterval(counter)
+			}else if(app.time == 0){
+				app.end()
 			}
 		},1000);
 	</script>
